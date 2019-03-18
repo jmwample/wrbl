@@ -1,0 +1,4 @@
+sudo apt remove --purge postgresql postgresql-contrib
+
+sudo deluser wrbl_admin 
+sudo deluser wrbl_data

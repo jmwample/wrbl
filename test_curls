@@ -1,0 +1,6 @@
+# test API Key with correct Key
+curl -H 'X-API-Key:QBWTNdHn2l7S5eqcvRqr61X6kArLiFSuqKF8XdOj7sf5cDNGglqLlIZH54HEs2Dw' 127.0.0.1:5000/api/upload
+
+
+# test API  with incorrect Key
+curl -H 'X-API-Key:QBWTNdHn2l7S5eqcvRqr61X6kArLiFSuqKF8XdOj7sf5cD' 127.0.0.1:5000/api/upload

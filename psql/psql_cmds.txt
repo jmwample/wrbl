@@ -1,0 +1,13 @@
+sudo -i -u postgres
+
+createuser wrbl_admin   # n y y
+createuser wrbl_data    # n n n 
+
+createdb wrbl
+
+# create linux users
+
+sudo -i -u wrbl_admin 
+psql -d wrbl
+
+# See `api/init_schema.sql` for table schema
