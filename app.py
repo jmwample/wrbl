@@ -2,7 +2,8 @@ from flask import Flask, abort, request, jsonify, g
 from functools import wraps
 import config
 import os
-import sqlite3
+import psycopg2
+import json
 import yaml
 
 
@@ -34,18 +35,23 @@ def require_apikey(view_function):
     @wraps(view_function)
     # the new, post-decoration function. Note *args and **kwargs here.
     def decorated_function(*args, **kwargs):
-        if 'X-API-Key' in request.headers:
-            if check_API_key(request.headers['X-API-Key']):
-                return view_function(*args, **kwargs)
+        device_id = request.args.get('device_id')
+        if not (device_id == None):
+            if 'X-API-Key' in request.headers:
+                api_key = request.headers['X-API-Key']
+                if check_API_key(device_id, api_key):
+                    return view_function(*args, **kwargs)
+                else:
+                    raise InvalidUsage('Unauthorized', status_code=401)
             else:
-                raise InvalidUsage('Unauthorized', status_code=401)
+                raise InvalidUsage('Missing Auth Header', status_code=400)
         else:
-            raise InvalidUsage('Missing Auth Header', status_code=400)
+            raise InvalidUsage('Missing Device ID', status_code=400)
     return decorated_function
 
 
-def check_API_key(api_key):
-    if api_key == app.config['API_KEY']:
+def check_API_key(device_id, api_key):
+    if api_key == get_api_key(device_id):
         return True
     else:
         return False
@@ -58,18 +64,25 @@ def hello():
     return "Hello World!"
 
 
-@app.route("/api/upload")
+@app.route("/api/upload", methods=["POST"])
 @require_apikey
 def upload():
-    device_id = request.args.get('device-id')
+    device_id = request.args.get('device_id')
+    if request.data == None:
+        return jsonify({'status':'success'})
+    try:
+        data_j = json.loads(request.data)
+        commit_record(device_id, json.dumps(data_j))
+    except json.JSONDecodeError as ex:
+        InvalidUsage('JSON Format Error', status_code=400)
     return jsonify({'status':'success'})
 
-@app.route("/api/download")
+@app.route("/api/test_key", methods=["POST"])
 @require_apikey
 def download():
+    data = json.loads(request.data)
+    print(data)
     return jsonify({'status':'success'})
-
-
 
 
 #===========================[PSQL DB]==================================
@@ -87,9 +100,29 @@ def init_db():
         db_admin = psycopg2.connect(app.config['PSQL_ADMIN_CONN_STR']) 
         with db_admin.cursor() as cursor:
             cursor.execute(open("api/init_schema.sql", "r").read())
+            db_admin.commit()
     except Exception as ex:
         raise DatabaseError(str(ex), 500)
         exit(5)
+
+def get_api_key(device_id):
+    query_str = "SELECT device_api_key FROM devices WHERE device_id=%s" 
+    try: 
+        conn = get_db()
+        cursor = conn.cursor()
+        cursor.execute(query_str, (device_id,))
+        # verify success
+        if cursor.rowcount != 1:
+            raise InvalidUsage('Unauthorized', status_code=401)
+        api_key = cursor.fetchone()
+        cursor.close()
+        return api_key[0]
+    except psycopg2.DataError as ex:
+        raise InvalidUsage("Malformed Device ID", status_code=400)
+    except psycopg2.DatabaseError as ex:
+        raise DatabaseError(str(ex), 500)
+
+    
 
 def commit_record(device_id, record):
     query_str = "INSERT INTO sensor_data (device_id, record) values (%s, %s)"
@@ -102,6 +135,8 @@ def commit_record(device_id, record):
             raise DatabaseError('Rowcount error while inserting record',500, {'err_str':str(ex)})
         conn.commit()
         cursor.close()
+    except psycopg2.DataError as ex:
+        raise InvalidUsage("Malformed Device ID", status_code=400)
     except Exception as ex:
         raise DatabaseError(str(ex), 500)
 
@@ -162,6 +197,8 @@ def handle_invalid_usage(error):
     response.status_code = error.status_code
     return response
 
+@app.errorhandler(400)
+@app.errorhandler(401)
 @app.errorhandler(404)
 def handle_api_error(ex):
     if request.path.startswith('/api/') and app.config['DEBUG']== True:
@@ -171,8 +208,9 @@ def handle_api_error(ex):
         response.status_code = 404
         return response
     else:
+        response = jsonify({'status':'failure'})
         response.status_code = 404
-        return jsonify({'status':'failure'})
+        return response
 
 @app.errorhandler(500)
 def handle_api_error(ex):

@@ -1,6 +1,38 @@
-# test API Key with correct Key
-curl -H 'X-API-Key:QBWTNdHn2l7S5eqcvRqr61X6kArLiFSuqKF8XdOj7sf5cDNGglqLlIZH54HEs2Dw' 127.0.0.1:5000/api/upload
+# test API Key with correct Key and data
+curl -H 'X-API-Key:QBWTNdHn2l7S5eqcvRqr61X6kArLiFSuqKF8XdOj7sf5cDNGglqLlIZH54HEs2Dw' \
+    -H "Content-Type: application/json" \
+    -X POST 127.0.0.1:5000/api/upload?device_id=6829cb99-d81c-4823-bca6-bbdd3ddaf527 \
+    --data '{"hr":"123", "gsr":1234}'
 
+# test API Key with correct Key
+curl -H 'X-API-Key:QBWTNdHn2l7S5eqcvRqr61X6kArLiFSuqKF8XdOj7sf5cDNGglqLlIZH54HEs2Dw' \
+    -H "Content-Type: application/json" \
+    -X POST 127.0.0.1:5000/api/upload?device_id=6829cb99-d81c-4823-bca6-bbdd3ddaf527
+
+# test API  with malformed ID
+curl -H 'X-API-Key:QBWTNdHn2l7S5eqcvRqr61X6kArLiFSuqKF8XdOj7sf5cDNGglqLlIZH54HEs2Dw' \
+    -H "Content-Type: application/json" \
+    -X POST 127.0.0.1:5000/api/upload?device_id=6829cb99-d81c-4823-bca6-bbdd3
+
+# test API  with incorrect ID
+curl -H 'X-API-Key:QBWTNdHn2l7S5eqcvRqr61X6kArLiFSuqKF8XdOj7sf5cDNGglqLlIZH54HEs2Dw' \
+    -H "Content-Type: application/json" \
+    -X POST 127.0.0.1:5000/api/upload?device_id=6829cb99-d81c-4823-bca6-bbdd3dd00000
+
+# test API  with no device ID
+curl -H 'X-API-Key:QBWTNdHn2l7S5eqcvRqr61X6kArLiFSuqKF8XdOj7sf5cDNGglqLlIZH54HEs2Dw' \
+    -H "Content-Type: application/json" \
+    -X POST 127.0.0.1:5000/api/upload
 
 # test API  with incorrect Key
-curl -H 'X-API-Key:QBWTNdHn2l7S5eqcvRqr61X6kArLiFSuqKF8XdOj7sf5cD' 127.0.0.1:5000/api/upload
+curl -H 'X-API-Key:QBWTNdHn2l7S5eqcvRqr61X6kArLiFSuqKF8XdOj7sf5cD' \
+    -H "Content-Type: application/json" \
+    -X POST 127.0.0.1:5000/api/upload?device_id=6829cb99-d81c-4823-bca6-bbdd3ddaf527
+
+# test API  with no API key
+curl -H "Content-Type: application/json" \
+    -X POST 127.0.0.1:5000/api/upload?device_id=6829cb99-d81c-4823-bca6-bbdd3ddaf527
+
+
+# test API  with unknown path
+curl 127.0.0.1:5000/api/up

@@ -1,13 +1,20 @@
 sudo -i -u postgres
 
-createuser wrbl_admin   # n y y
-createuser wrbl_data    # n n n 
+createuser --interactive wrbl_admin   # n y y
+createuser --interactive wrbl_data    # n n n 
 
 createdb wrbl
 
-# create linux users
+psql wrbl
 
-sudo -i -u wrbl_admin 
-psql -d wrbl
+# ALTER USER wrbl_admin with ENCRYPTED PASSWORD '';
+# ALTER USER wrbl_data with ENCRYPTED PASSWORD '';
+# CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
+
+psql -h 127.0.0.1 -d wrbl wrbl_admin
 
 # See `api/init_schema.sql` for table schema
+
+
+
+psql wrbl_admin -h 127.0.0.1 -d wrbl
