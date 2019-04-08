@@ -1,4 +1,4 @@
-from flask import Flask, abort, request, jsonify, g 
+from flask import Flask, abort, request, jsonify, g, render_template
 from functools import wraps
 import config
 import os
@@ -60,9 +60,21 @@ def check_API_key(device_id, api_key):
 #==============================[Routes]================================
 
 @app.route("/")
-def hello():
-    return "Hello World!"
+def landing():
+    ex_key = "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
+    ex_id = "XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX"
+    return render_template("index.html", 
+        example_api_key=ex_key, 
+        example_device_id=ex_id)
 
+
+
+@app.route("/device", methods=["POST"])
+# @require_apikey
+def device_landing():
+    device_id = request.args.get('device_id')
+    return render_template("device.html",
+        device_id = "XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX")
 
 @app.route("/api/upload", methods=["POST"])
 @require_apikey
@@ -72,7 +84,8 @@ def upload():
         return jsonify({'status':'success'})
     try:
         data_j = json.loads(request.data)
-        commit_record(device_id, json.dumps(data_j))
+        for sample in data_j:
+            commit_record(device_id, json.dumps(sample))
     except json.JSONDecodeError as ex:
         InvalidUsage('JSON Format Error', status_code=400)
     return jsonify({'status':'success'})
