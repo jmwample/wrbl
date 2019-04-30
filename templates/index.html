@@ -1,11 +1,46 @@
 {% extends "wrap/home.html" %}
 {% block main %}
-<div>
-    <form action="/device" method="post">
-        Device ID:<br>
-        <input type="text" name="device_id" value="{{ example_device_id }}"><br>
-        Device API key:<br>
-        <input type="text" name="api_key" value="{{ example_api_key }}"><br><br>
-        <input type="submit" value="Submit">
-    </form>
+<body<
+  <div class="px-3 py-3 pt-md-5 pb-md-4 mx-auto text-center" style="max-width:700px;">
+      <h1> Wearable Polygraph Interface </h1>
+      <p class="lead"> This website provides an interface to actuate the body measurements made 
+          using the wearable sensor tool. From here we can monitor device data and create
+          experiments to investigate the impact that body measurement technologies can have
+          on human interaction.
+  </div>
+  <div class="container"> 
+    <div class="card-deck mb-3 text-center">
+      <div class="card mb-4 box-shadow">
+        <div class="card-header">
+          <h4 class="my-0 font-weight-normal">Dashboard</h4>
+        </div>
+        <div class="card-body">
+          <!--h1 class="card-title pricing-card-title">$0 <small class="text-muted">/ mo</small></h1-->
+          <form action="/device" method="post">
+              Device ID:<br>
+              <input type="text" name="device_id" value="{{ example_device_id }}"><br>
+              Device API key:<br>
+              <input type="text" name="api_key" value="{{ example_api_key }}"><br><br>
+              <input class="btn btn-lg btn-block btn-primary" type="submit" value="Device Dashboard">
+              <input class="btn btn-lg btn-block btn-primary" type="submit" value="Create Experiment">
+          </form>
+        </div>
+      </div>
+      <div class="card mb-4 box-shadow">
+        <div class="card-header">
+          <h4 class="my-0 font-weight-normal">Upcoming</h4>
+        </div>
+        <div class="card-body">
+          <h1 class="card-title pricing-card-title"><small class="text-muted">Accounts</small></h1>
+          <ul class="list-unstyled mt-3 mb-4">
+            <li>Connect multiple devices to your account</li>
+            <li>Track experiments across devices.</li>
+            <li>Android integration</li>
+          </ul>
+          <button type="button" class="btn btn-lg btn-block btn-outline-primary disabled">Create Account</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
 {% endblock %}

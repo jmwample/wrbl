@@ -11,7 +11,7 @@ class DevelopmentConfig(BaseConfig):
     DEBUG = True
     TESTING = True
     HOST = '127.0.0.1'
-    PORT = 6000
+    PORT = 6001
 
 
 class TestingConfig(BaseConfig):

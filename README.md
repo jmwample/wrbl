@@ -32,3 +32,15 @@ Customize the config (`config.py`)
 Class YourConfig(BaseConfig):
     API_KEY=XXXXXXXXXXXXXXXXXXXXX
 ```
+
+
+### Install grafana 
+
+```
+sudo add-apt-repository "deb https://packages.grafana.com/oss/deb stable main"
+curl https://packages.grafana.com/gpg.key | sudo apt-key add -
+sudo apt-get update
+sudo apt-get install grafana
+sudo service grafana-server start
+```
+
