@@ -1,4 +1,9 @@
 
+# Wearable Polygraph
+
+## Server and client
+
+[See the writeups on my blog](https://rm-rf-no-preserve.blogspot.com/search/label/WEARABLES).
 
 Install Apt dependencies. 
 
