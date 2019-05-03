@@ -14,7 +14,7 @@ virtualenv -p /usr/bin/python3.6 .wrbl
 
 source .wrbl/bin/activate
 
-pip install -r requirements.txt
+pip3 install -r requirements.txt
 ```
 
 
@@ -22,17 +22,17 @@ pip install -r requirements.txt
 Run the App
 ```
 FLASK_APP=app.py
+FLAS_ENV='production'
 
-flask run
+python3 app.py
 ```
 
 
 Customize the config (`config.py`)
 ```
 Class YourConfig(BaseConfig):
-    API_KEY=XXXXXXXXXXXXXXXXXXXXX
+    PSQL_ADMIN_CONN_STR="host='localhost' dbname='wrbl' user='wrbl_admin' password='************'"
 ```
-
 
 ### Install grafana 
 
@@ -44,3 +44,13 @@ sudo apt-get install grafana
 sudo service grafana-server start
 ```
 
+### TODO FUTURE
+
+Grafana + Experiment Plottiing Fixes
+
+Add more sources
+
+Grafana templating for multiple devices
+    - https://grafana.com/docs/v3.1/reference/templating/
+    - https://grafana.com/docs/reference/sharing/
+    - https://grafana.com/docs/reference/templating/

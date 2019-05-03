@@ -3,8 +3,8 @@ class BaseConfig(object):
     TESTING = False
     HOST = '127.0.0.1'
     PORT = 5000
-    PSQL_CONN_STR="host='localhost' dbname='wrbl' user='wrbl_data' password='5A&q*#7*&'"
-    PSQL_ADMIN_CONN_STR="host='localhost' dbname='wrbl' user='wrbl_admin' password='2Q2fzHV*D@D!'"
+    PSQL_CONN_STR="host='localhost' dbname='wrbl' user='wrbl_data' password='*********'"
+    PSQL_ADMIN_CONN_STR="host='localhost' dbname='wrbl' user='wrbl_admin' password='************'"
 
 
 class DevelopmentConfig(BaseConfig):
