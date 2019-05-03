@@ -31,6 +31,9 @@ python3 app.py
 Customize the config (`config.py`)
 ```
 Class YourConfig(BaseConfig):
+    HOST = '127.0.0.1'
+    PORT = 5000
+    PSQL_CONN_STR="host='localhost' dbname='wrbl' user='wrbl_data' password='*********'"
     PSQL_ADMIN_CONN_STR="host='localhost' dbname='wrbl' user='wrbl_admin' password='************'"
 ```
 
@@ -46,11 +49,12 @@ sudo service grafana-server start
 
 ### TODO FUTURE
 
-Grafana + Experiment Plottiing Fixes
-
 Add more sources
 
+Grafana + Experiment Plottiing Fixes
+
 Grafana templating for multiple devices
-    - https://grafana.com/docs/v3.1/reference/templating/
-    - https://grafana.com/docs/reference/sharing/
-    - https://grafana.com/docs/reference/templating/
+
+* https://grafana.com/docs/v3.1/reference/templating/
+* https://grafana.com/docs/reference/sharing/
+* https://grafana.com/docs/reference/templating/
